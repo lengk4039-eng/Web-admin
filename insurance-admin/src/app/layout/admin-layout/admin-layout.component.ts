@@ -7,6 +7,7 @@ import { filter, map, takeUntil } from 'rxjs/operators';
 
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { AuthService } from '../../core/services/auth.service';
 
 /**
  * Shell layout shown for every page after login: sidebar on the left,
@@ -34,6 +35,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     private breakpointObserver: BreakpointObserver,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -73,8 +75,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   onLogout(): void {
-    // Wired up to auth.service.ts in Stage 2.
-    this.router.navigate(['/login']);
+    this.authService.logout();
   }
 
   private readTitleFromRoute(): string {

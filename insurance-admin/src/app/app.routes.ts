@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 
+import { authGuard } from './core/guards/auth.guard';
+
 export const routes: Routes = [
   {
     path: 'login',
@@ -11,9 +13,10 @@ export const routes: Routes = [
     path: '',
     loadComponent: () =>
       import('./layout/admin-layout/admin-layout.component').then((m) => m.AdminLayoutComponent),
-    // NOTE (Stage 2): add `canActivate: [authGuard]` here once
-    // core/guards/auth.guard.ts exists, so every child route below
-    // requires a logged-in user.
+    // Every child route below requires a logged-in user. To also restrict
+    // a specific route to certain roles, add `data: { roles: ['ADMIN'] }`
+    // to that child route - authGuard checks it automatically.
+    canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {

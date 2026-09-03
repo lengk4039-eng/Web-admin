@@ -1,19 +1,21 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 
+import { AuthService } from '../../core/services/auth.service';
+import { UserRole } from '../../core/models/auth.model';
+
 /**
- * One entry in the sidebar navigation menu.
- * `roles` will be used in Stage 2 to hide items the logged-in
- * user's role is not allowed to see (ADMIN / CONSULTANT / STAFF).
+ * One entry in the sidebar navigation menu. `roles` controls which
+ * logged-in user roles see this item (ADMIN / CONSULTANT / STAFF).
  */
 export interface NavItem {
   label: string;
   route: string;
   icon: string;
-  roles: Array<'ADMIN' | 'CONSULTANT' | 'STAFF'>;
+  roles: UserRole[];
 }
 
 export const NAV_ITEMS: NavItem[] = [
@@ -37,10 +39,19 @@ export const NAV_ITEMS: NavItem[] = [
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent {
+  private authService = inject(AuthService);
+
   /** Emitted when a nav link is clicked, so the mobile layout can close the drawer. */
   @Output() linkClicked = new EventEmitter<void>();
 
-  navItems = NAV_ITEMS;
+  /** Only the items the logged-in user's role is allowed to see. */
+  navItems = computed(() => {
+    const user = this.authService.currentUser();
+    if (!user) {
+      return [];
+    }
+    return NAV_ITEMS.filter((item) => item.roles.includes(user.role));
+  });
 
   onLinkClick(): void {
     this.linkClicked.emit();

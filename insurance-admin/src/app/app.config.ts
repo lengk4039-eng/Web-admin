@@ -4,14 +4,13 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { routes } from './app.routes';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimationsAsync(),
-    // NOTE: the auth interceptor is registered in Stage 2 once
-    // core/interceptors/auth.interceptor.ts is created.
-    provideHttpClient(withInterceptors([])),
+    provideHttpClient(withInterceptors([authInterceptor])),
   ],
 };
