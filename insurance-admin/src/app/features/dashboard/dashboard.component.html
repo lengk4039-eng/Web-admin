@@ -1,8 +1,72 @@
-<mat-card>
-  <h2>Dashboard</h2>
-  <p>
-    This is a placeholder page confirming the admin layout, sidebar and
-    routing work correctly. The real dashboard with summary cards and
-    charts backed by live API data will be built in Stage 3.
-  </p>
-</mat-card>
+<div class="dashboard">
+  @if (isLoading) {
+    <div class="state-message">
+      <mat-spinner diameter="36"></mat-spinner>
+      <p>Loading dashboard...</p>
+    </div>
+  } @else if (errorMessage) {
+    <div class="state-message error">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-stroked-button color="primary" (click)="loadDashboard()">Retry</button>
+    </div>
+  } @else {
+    <div class="stat-grid">
+      <app-stat-card
+        label="Total Customers"
+        [value]="summary?.totalCustomers ?? 0"
+        icon="people"
+        accentColor="#2a78d6"
+      ></app-stat-card>
+      <app-stat-card
+        label="Pending Quotes"
+        [value]="summary?.pendingQuotes ?? 0"
+        icon="request_quote"
+        accentColor="#eda100"
+      ></app-stat-card>
+      <app-stat-card
+        label="Today's Appointments"
+        [value]="summary?.todaysAppointments ?? 0"
+        icon="event"
+        accentColor="#1baf7a"
+      ></app-stat-card>
+      <app-stat-card
+        label="Active Policies"
+        [value]="summary?.activePolicies ?? 0"
+        icon="policy"
+        accentColor="#4a3aa7"
+      ></app-stat-card>
+      <app-stat-card
+        label="Pending Payments"
+        [value]="summary?.pendingPayments ?? 0"
+        icon="payments"
+        accentColor="#e34948"
+      ></app-stat-card>
+    </div>
+
+    <div class="chart-grid">
+      <div class="chart-card">
+        <app-bar-chart
+          title="Quotes by Status"
+          [data]="quotesByStatus"
+          emptyMessage="No quotes yet."
+        ></app-bar-chart>
+      </div>
+      <div class="chart-card">
+        <app-bar-chart
+          title="Policies by Insurance Type"
+          [data]="policiesByType"
+          emptyMessage="No active policies yet."
+        ></app-bar-chart>
+      </div>
+      <div class="chart-card full-width">
+        <app-bar-chart
+          title="Monthly Payments"
+          [data]="monthlyPayments"
+          valuePrefix="$"
+          emptyMessage="No payments recorded yet."
+        ></app-bar-chart>
+      </div>
+    </div>
+  }
+</div>

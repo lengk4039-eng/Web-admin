@@ -1,0 +1,9 @@
+<mat-card class="stat-card">
+  <div class="stat-icon" [style.background-color]="accentColor + '1a'" [style.color]="accentColor">
+    <mat-icon>{{ icon }}</mat-icon>
+  </div>
+  <div class="stat-body">
+    <span class="stat-value">{{ value === null ? '—' : value.toLocaleString() }}</span>
+    <span class="stat-label">{{ label }}</span>
+  </div>
+</mat-card>

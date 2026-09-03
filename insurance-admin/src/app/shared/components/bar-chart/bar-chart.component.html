@@ -1,0 +1,19 @@
+<div class="bar-chart">
+  <h3 class="chart-title">{{ title }}</h3>
+
+  @if (data.length === 0) {
+    <p class="empty-state">{{ emptyMessage }}</p>
+  } @else {
+    <div class="bar-rows">
+      @for (item of data; track item.label) {
+        <div class="bar-row">
+          <span class="bar-label" [title]="item.label">{{ item.label }}</span>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="widthPercent(item.value)"></div>
+          </div>
+          <span class="bar-value">{{ formatValue(item.value) }}</span>
+        </div>
+      }
+    </div>
+  }
+</div>
